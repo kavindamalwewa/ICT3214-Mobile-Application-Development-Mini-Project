@@ -35,7 +35,7 @@ public class loginActivity extends AppCompatActivity {
         btnLoginSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //validation check add karnna one...
+                //Todo: Email/Password validation check add karnna one...
 
                 // Type karala thiyena akuru tika allaganna (String walata ganna)
                 String email = etEmail.getText().toString().trim();
@@ -44,9 +44,21 @@ public class loginActivity extends AppCompatActivity {
                 // Email eka hari password eka hari his nam error ekak pennanna
                 if (email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(loginActivity.this, "Please enter Email and Password", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Dekama gahala nam, type karapu email eka message ekak widihata pennanna
-                    Toast.makeText(loginActivity.this, "Success! Email: " + email, Toast.LENGTH_LONG).show();
+                } // Dekama gahala nam, database eken balanawa details harida kiyala
+                else {
+                    DatabaseHelper myDb = new DatabaseHelper(loginActivity.this);
+
+                    // Email/Password DB eke thiyenawada check karanawa
+                    boolean isValid = myDb.checkUser(email, password);
+
+                    if (isValid) {
+                        Toast.makeText(loginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+
+                        // TODO: Methanadi thamai api app eke Home Screen ekata yanna Intent eka liyanne
+
+                    } else {
+                        Toast.makeText(loginActivity.this, "Invalid Email or Password!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
