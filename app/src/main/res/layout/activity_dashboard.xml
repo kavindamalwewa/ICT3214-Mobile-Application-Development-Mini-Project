@@ -25,11 +25,12 @@
             android:layout_height="48dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_user_profile"
-            android:contentDescription="User Profile"
+            android:layout_marginRight="15dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:focusable="true" />
+            android:contentDescription="User Profile"
+            android:focusable="true"
+            android:src="@drawable/ic_user_profile" />
     </RelativeLayout>
 
     <TextView

@@ -1,10 +1,11 @@
 package com.example.ict3214_mobile_application_development_mini_project;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -14,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 public class DashboardActivity extends AppCompatActivity {
 
     TextView tvWelcomeName, tvBMIValue, tvBMIStatus;
+    ImageView ivUserProfile;
     DatabaseHelper myDb;
     String userEmail;
 
@@ -31,10 +33,9 @@ public class DashboardActivity extends AppCompatActivity {
         tvWelcomeName = findViewById(R.id.tvWelcomeName);
         tvBMIValue = findViewById(R.id.tvBMIValue);
         tvBMIStatus = findViewById(R.id.tvBMIStatus);
+        ivUserProfile = findViewById(R.id.ivUserProfile);
 
         myDb = new DatabaseHelper(this);
-
-        // Login eken ewapu email eka gannawa
         userEmail = getIntent().getStringExtra("LOGGED_IN_EMAIL");
 
         if (userEmail != null) {
@@ -42,32 +43,26 @@ public class DashboardActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Error loading user data", Toast.LENGTH_SHORT).show();
         }
+
+        ivUserProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardActivity.this, UserProfileActivity.class);
+            intent.putExtra("LOGGED_IN_EMAIL", userEmail);
+            startActivity(intent);
+        });
     }
 
     private void loadUserDataAndCalculateBMI() {
         Cursor res = myDb.getUserDetails(userEmail);
-
         if (res != null && res.moveToFirst()) {
-            // Database eken data tika gannawa
             String name = res.getString(0);
             String heightStr = res.getString(1);
             String weightStr = res.getString(2);
-
-            // Welcome message eka set karanawa
             tvWelcomeName.setText("Welcome, " + name + "!");
-
             try {
-                // Height eka (cm) m walata harawanawa
                 float heightMeters = Float.parseFloat(heightStr) / 100;
                 float weightKg = Float.parseFloat(weightStr);
-
-                // BMI formula: weight (kg) / [height (m)]^2
                 float bmi = weightKg / (heightMeters * heightMeters);
-
-                // BMI eka dashama sthana 1kata pennanna hadanawa
                 tvBMIValue.setText(String.format("%.1f", bmi));
-
-                // BMI Status eka set karanawa
                 if (bmi < 18.5) {
                     tvBMIStatus.setText("Underweight");
                     tvBMIStatus.setTextColor(getResources().getColor(android.R.color.holo_blue_light));
@@ -81,11 +76,10 @@ public class DashboardActivity extends AppCompatActivity {
                     tvBMIStatus.setText("Obese");
                     tvBMIStatus.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
                 }
-
             } catch (NumberFormatException e) {
                 Toast.makeText(this, "Error calculating BMI. Check profile details.", Toast.LENGTH_SHORT).show();
             }
-            res.close(); // Cursor eka close karanawa
+            res.close();
         }
     }
 }
