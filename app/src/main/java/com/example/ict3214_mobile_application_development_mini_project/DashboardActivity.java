@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -19,6 +20,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     TextView tvWelcomeName, tvBMIValue, tvBMIStatus, tvCurrentDate;
     ImageView ivUserProfile;
+    FloatingActionButton floatingActionButton;
     DatabaseHelper myDb;
     String userEmail;
 
@@ -38,6 +40,7 @@ public class DashboardActivity extends AppCompatActivity {
         tvBMIStatus = findViewById(R.id.tvBMIStatus);
         ivUserProfile = findViewById(R.id.ivUserProfile);
         tvCurrentDate = findViewById(R.id.tvCurrentDate);
+        floatingActionButton = findViewById(R.id.floatingActionButton);
 
         // Set current system date
         String currentDate = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(new Date());
@@ -54,6 +57,13 @@ public class DashboardActivity extends AppCompatActivity {
 
         ivUserProfile.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, UserProfileActivity.class);
+            intent.putExtra("LOGGED_IN_EMAIL", userEmail);
+            startActivity(intent);
+        });
+
+        // Link to Add Activities page
+        floatingActionButton.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardActivity.this, add_activites.class);
             intent.putExtra("LOGGED_IN_EMAIL", userEmail);
             startActivity(intent);
         });
