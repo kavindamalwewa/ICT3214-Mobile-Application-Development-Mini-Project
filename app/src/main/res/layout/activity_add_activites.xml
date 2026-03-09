@@ -34,7 +34,7 @@
         android:id="@+id/cvActivityInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:visibility="gone"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp"
@@ -77,5 +77,19 @@
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cvActivityInput">
+
+        <LinearLayout
+            android:id="@+id/llActivitiesList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

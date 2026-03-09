@@ -1,10 +1,14 @@
 package com.example.ict3214_mobile_application_development_mini_project;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +31,7 @@ public class add_activites extends AppCompatActivity {
     private CardView cvActivityInput;
     private Spinner spinnerActivities, spinnerDuration;
     private ImageButton btnConfirmActivity;
+    private LinearLayout llActivitiesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +51,7 @@ public class add_activites extends AppCompatActivity {
         spinnerActivities = findViewById(R.id.spinnerActivities);
         spinnerDuration = findViewById(R.id.spinnerDuration);
         btnConfirmActivity = findViewById(R.id.btnConfirmActivity);
+        llActivitiesList = findViewById(R.id.llActivitiesList);
 
         // Get current system date
         String currentDate = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(new Date());
@@ -73,10 +79,51 @@ public class add_activites extends AppCompatActivity {
             String selectedActivity = spinnerActivities.getSelectedItem().toString();
             String selectedDuration = spinnerDuration.getSelectedItem().toString();
             
-            Toast.makeText(this, "Added: " + selectedActivity + " for " + selectedDuration, Toast.LENGTH_SHORT).show();
+            addActivityToList(selectedActivity, selectedDuration);
+            
+            Toast.makeText(this, "Added: " + selectedActivity, Toast.LENGTH_SHORT).show();
             
             // Hide the input card after adding
             cvActivityInput.setVisibility(View.GONE);
         });
+    }
+
+    private void addActivityToList(String activity, String duration) {
+        // Create a new CardView for each activity added
+        CardView cardView = new CardView(this);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        layoutParams.setMargins(0, 0, 0, 16);
+        cardView.setLayoutParams(layoutParams);
+        cardView.setRadius(12f);
+        cardView.setCardElevation(4f);
+        cardView.setContentPadding(20, 20, 20, 20);
+
+        LinearLayout horizontalLayout = new LinearLayout(this);
+        horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
+        horizontalLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
+
+        TextView tvActivity = new TextView(this);
+        tvActivity.setText(activity);
+        tvActivity.setTextSize(18); // Default unit is SP
+        tvActivity.setTypeface(null, Typeface.BOLD);
+        tvActivity.setTextColor(Color.BLACK);
+        tvActivity.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+
+        TextView tvDuration = new TextView(this);
+        tvDuration.setText(duration);
+        tvDuration.setTextSize(16); // Default unit is SP
+        tvDuration.setTextColor(Color.GRAY);
+
+        horizontalLayout.addView(tvActivity);
+        horizontalLayout.addView(tvDuration);
+        cardView.addView(horizontalLayout);
+
+        llActivitiesList.addView(cardView, 0); // Add to top of the list
     }
 }
