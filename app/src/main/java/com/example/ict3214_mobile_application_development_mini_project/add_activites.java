@@ -1,5 +1,6 @@
 package com.example.ict3214_mobile_application_development_mini_project;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -27,7 +28,7 @@ import java.util.Locale;
 public class add_activites extends AppCompatActivity {
 
     private TextView tvSystemDate;
-    private Button btnAddNow;
+    private Button btnAddNow, btnComplete;
     private CardView cvActivityInput;
     private Spinner spinnerActivities, spinnerDuration;
     private ImageButton btnConfirmActivity;
@@ -47,6 +48,7 @@ public class add_activites extends AppCompatActivity {
         // Initialize UI components
         tvSystemDate = findViewById(R.id.tvSystemDate);
         btnAddNow = findViewById(R.id.btnAddNow);
+        btnComplete = findViewById(R.id.btnComplete);
         cvActivityInput = findViewById(R.id.cvActivityInput);
         spinnerActivities = findViewById(R.id.spinnerActivities);
         spinnerDuration = findViewById(R.id.spinnerDuration);
@@ -78,13 +80,25 @@ public class add_activites extends AppCompatActivity {
         btnConfirmActivity.setOnClickListener(v -> {
             String selectedActivity = spinnerActivities.getSelectedItem().toString();
             String selectedDuration = spinnerDuration.getSelectedItem().toString();
-            
+
             addActivityToList(selectedActivity, selectedDuration);
-            
+
             Toast.makeText(this, "Added: " + selectedActivity, Toast.LENGTH_SHORT).show();
-            
+
             // Hide the input card after adding
             cvActivityInput.setVisibility(View.GONE);
+        });
+
+        // Complete button click
+        btnComplete.setOnClickListener(v -> {
+            Intent intent = new Intent(add_activites.this, DashboardActivity.class);
+            // Pass user email if available
+            String userEmail = getIntent().getStringExtra("LOGGED_IN_EMAIL");
+            if (userEmail != null) {
+                intent.putExtra("LOGGED_IN_EMAIL", userEmail);
+            }
+            startActivity(intent);
+            finish();
         });
     }
 
