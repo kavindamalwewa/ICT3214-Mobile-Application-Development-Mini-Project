@@ -22,7 +22,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -34,8 +33,6 @@ public class add_activites extends AppCompatActivity {
     private Spinner spinnerActivities, spinnerDuration;
     private ImageButton btnConfirmActivity;
     private LinearLayout llActivitiesList;
-
-    private ArrayList<ActivityItem> activityList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +82,6 @@ public class add_activites extends AppCompatActivity {
             String selectedDuration = spinnerDuration.getSelectedItem().toString();
 
             addActivityToList(selectedActivity, selectedDuration);
-            activityList.add(new ActivityItem(selectedActivity, selectedDuration)); // Add to list
 
             Toast.makeText(this, "Added: " + selectedActivity, Toast.LENGTH_SHORT).show();
 
@@ -95,14 +91,9 @@ public class add_activites extends AppCompatActivity {
 
         // Complete button click
         btnComplete.setOnClickListener(v -> {
-            String userEmail = getIntent().getStringExtra("LOGGED_IN_EMAIL");
-            String currentDate1 = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(new Date());
-            DatabaseHelper db = new DatabaseHelper(add_activites.this);
-            for (ActivityItem item : activityList) {
-                db.insertActivity(userEmail, item.activity, item.duration, currentDate1);
-            }
             Intent intent = new Intent(add_activites.this, DashboardActivity.class);
             // Pass user email if available
+            String userEmail = getIntent().getStringExtra("LOGGED_IN_EMAIL");
             if (userEmail != null) {
                 intent.putExtra("LOGGED_IN_EMAIL", userEmail);
             }
@@ -149,14 +140,5 @@ public class add_activites extends AppCompatActivity {
 
         llActivitiesList.addView(cardView, 0); // Add to top of the list
     }
-
-    // ActivityItem class to hold activity and duration
-    private static class ActivityItem {
-        String activity;
-        String duration;
-        ActivityItem(String activity, String duration) {
-            this.activity = activity;
-            this.duration = duration;
-        }
-    }
 }
+

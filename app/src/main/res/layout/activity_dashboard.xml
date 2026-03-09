@@ -128,4 +128,12 @@
         android:background="#F5F5F5"
         android:padding="12dp" />
 
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/barChart"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="#FFFFFF" />
+
 </LinearLayout>
