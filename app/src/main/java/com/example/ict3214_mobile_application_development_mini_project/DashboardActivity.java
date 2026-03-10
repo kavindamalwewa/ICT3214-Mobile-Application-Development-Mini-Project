@@ -3,6 +3,7 @@ package com.example.ict3214_mobile_application_development_mini_project;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ public class DashboardActivity extends AppCompatActivity {
     TextView tvWelcomeName, tvBMIValue, tvBMIStatus, tvCurrentDate;
     ImageView ivUserProfile;
     FloatingActionButton floatingActionButton;
+    Button btnEdit;
     DatabaseHelper myDb;
     String userEmail;
     private LinearLayout llActivitiesList;
@@ -52,6 +54,7 @@ public class DashboardActivity extends AppCompatActivity {
         ivUserProfile = findViewById(R.id.ivUserProfile);
         tvCurrentDate = findViewById(R.id.tvCurrentDate);
         floatingActionButton = findViewById(R.id.floatingActionButton);
+        btnEdit = findViewById(R.id.btnDeleteItem);
         llActivitiesList = findViewById(R.id.llActivitiesList);
         barChart = findViewById(R.id.barChart);
 
@@ -82,6 +85,13 @@ public class DashboardActivity extends AppCompatActivity {
             intent.putExtra("LOGGED_IN_EMAIL", userEmail);
             startActivity(intent);
         });
+
+        // Link Edit button to Add Activities page
+        btnEdit.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardActivity.this, add_activites.class);
+            intent.putExtra("LOGGED_IN_EMAIL", userEmail);
+            startActivity(intent);
+        });
     }
 
     private void loadUserDataAndCalculateBMI() {
@@ -100,7 +110,7 @@ public class DashboardActivity extends AppCompatActivity {
                     tvBMIStatus.setText("Underweight");
                     tvBMIStatus.setTextColor(getResources().getColor(android.R.color.holo_blue_light));
                 } else if (bmi >= 18.5 && bmi < 24.9) {
-                    tvBMIStatus.setText("Normal Weight");
+                    tvBMIStatus.setText("Healthy Weight");
                     tvBMIStatus.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
                 } else if (bmi >= 25 && bmi < 29.9) {
                     tvBMIStatus.setText("Overweight");
