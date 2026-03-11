@@ -67,7 +67,6 @@ public class DashboardActivity extends AppCompatActivity {
         colorMap = new HashMap<>();
         for (int i = 0; i < ACTIVITIES.length; i++) colorMap.put(ACTIVITIES[i], ACTIVITY_COLORS[i]);
 
-        tvWelcomeName = findViewById(R.id.tvWelcomeName);
         tvBMIValue = findViewById(R.id.tvBMIValue);
         tvBMIStatus = findViewById(R.id.tvBMIStatus);
         ivUserProfile = findViewById(R.id.ivUserProfile);
@@ -121,7 +120,6 @@ public class DashboardActivity extends AppCompatActivity {
             String name = res.getString(0);
             String heightStr = res.getString(1);
             String weightStr = res.getString(2);
-            tvWelcomeName.setText("Welcome back,\n" + name + "!");
             try {
                 if (heightStr != null && weightStr != null) {
                     float heightMeters = Float.parseFloat(heightStr) / 100;
