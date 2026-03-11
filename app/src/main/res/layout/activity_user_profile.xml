@@ -9,8 +9,8 @@
     <!-- Header Section -->
     <ImageButton
         android:id="@+id/btnBack"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="71dp"
+        android:layout_height="62dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
