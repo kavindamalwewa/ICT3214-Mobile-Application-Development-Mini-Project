@@ -133,16 +133,18 @@
                         android:background="@android:drawable/btn_dropdown" />
                 </LinearLayout>
 
+                <!-- Modernized Confirm Button -->
                 <ImageButton
                     android:id="@+id/btnConfirmActivity"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_marginStart="12dp"
-                    android:background="@android:color/transparent"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="16dp"
+                    android:background="@drawable/bg_confirm_button"
                     android:contentDescription="Confirm"
+                    android:elevation="2dp"
+                    android:padding="12dp"
                     android:scaleType="fitCenter"
-                    android:src="@android:drawable/checkbox_on_background"
-                    app:tint="#4CAF50" />
+                    android:src="@drawable/ic_check" />
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
