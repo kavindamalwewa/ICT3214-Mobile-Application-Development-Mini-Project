@@ -184,10 +184,11 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:backgroundTint="#10B981"
-        android:text="Finish &amp; Save"
+        android:text="Save"
         android:textSize="18sp"
         android:textStyle="bold"
         app:cornerRadius="16dp"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="20dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

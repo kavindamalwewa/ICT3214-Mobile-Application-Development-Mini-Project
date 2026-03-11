@@ -138,7 +138,7 @@ public class add_activites extends AppCompatActivity {
     }
 
     private void setupSpinners() {
-        String[] activities = {"Walking", "Running", "Cycling", "Swimming", "Yoga", "Weightlifting", "Jumping Rope", "Hiking", "Dancing", "Pilates"};
+        String[] activities = {"Walking", "Running", "Cycling", "Push Ups", "Squats", "Weightlifting", "Jumping Jacks", "Bicycle Crunch", "Bicep Curls", "Shoulder Press"};
         ArrayAdapter<String> activityAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, activities);
         activityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerActivities.setAdapter(activityAdapter);
