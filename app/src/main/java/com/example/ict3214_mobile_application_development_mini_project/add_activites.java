@@ -51,6 +51,8 @@ public class add_activites extends AppCompatActivity {
             Color.parseColor("#F472B6"), Color.parseColor("#22D3EE"), Color.parseColor("#2DD4BF"),
             Color.parseColor("#94A3B8")
     };
+    
+    // Map to link activity names to their specific colors
     private Map<String, Integer> colorMap;
 
     @Override
@@ -59,17 +61,22 @@ public class add_activites extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_activites);
         
+        // Handle system window insets (status bar/navigation bar) for a full-screen experience
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
+        // Initialize the color mapping for activities
         colorMap = new HashMap<>();
-        for (int i = 0; i < ACTIVITIES.length; i++) colorMap.put(ACTIVITIES[i], ACTIVITY_COLORS[i]);
+        for (int i = 0; i < ACTIVITIES.length; i++) {
+            colorMap.put(ACTIVITIES[i], ACTIVITY_COLORS[i]);
+        }
 
         db = new DatabaseHelper(this);
         userEmail = getIntent().getStringExtra("LOGGED_IN_EMAIL");
+
         btnBack = findViewById(R.id.btnBack);
         tvSystemDate = findViewById(R.id.tvSystemDate);
         btnAddNow = findViewById(R.id.btnAddNow);
@@ -81,22 +88,41 @@ public class add_activites extends AppCompatActivity {
         llActivitiesList = findViewById(R.id.llActivitiesList);
 
         btnBack.setOnClickListener(v -> finish());
+
         String currentDate = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(new Date());
         tvSystemDate.setText(currentDate);
         tvSystemDate.setOnClickListener(v -> showDatePicker());
+
+        // Initialize drop-down menus
         setupSpinners();
+
+        // Load any existing activities already saved for the current date
         loadActivitiesFromDB(currentDate);
 
         btnAddNow.setOnClickListener(v -> cvActivityInput.setVisibility(View.VISIBLE));
+
+        // Add selected activity to the temporary list and update the UI
         btnConfirmActivity.setOnClickListener(v -> {
-            activityList.add(new ActivityItem(spinnerActivities.getSelectedItem().toString(), spinnerDuration.getSelectedItem().toString()));
+            activityList.add(new ActivityItem(
+                spinnerActivities.getSelectedItem().toString(), 
+                spinnerDuration.getSelectedItem().toString()
+            ));
             refreshListView();
             cvActivityInput.setVisibility(View.GONE);
         });
 
+        // Save all activities in the list to the database and exit
         btnComplete.setOnClickListener(v -> {
-            db.deleteActivitiesForDate(userEmail, tvSystemDate.getText().toString());
-            for (ActivityItem item : activityList) db.insertActivity(userEmail, item.activity, item.duration, tvSystemDate.getText().toString());
+            String date = tvSystemDate.getText().toString();
+            
+            // Clear existing records for this date to prevent duplicates
+            db.deleteActivitiesForDate(userEmail, date);
+
+            for (ActivityItem item : activityList) {
+                db.insertActivity(userEmail, item.activity, item.duration, date);
+            }
+            
+            Toast.makeText(this, "Activities saved successfully!", Toast.LENGTH_SHORT).show();
             finish();
         });
     }
@@ -104,9 +130,12 @@ public class add_activites extends AppCompatActivity {
     private void showDatePicker() {
         Calendar cal = Calendar.getInstance();
         new DatePickerDialog(this, (view, year, month, day) -> {
-            Calendar sel = Calendar.getInstance(); sel.set(year, month, day);
+            Calendar sel = Calendar.getInstance(); 
+            sel.set(year, month, day);
             String d = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(sel.getTime());
             tvSystemDate.setText(d);
+            
+            // Refresh the list whenever the date changes
             loadActivitiesFromDB(d);
         }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show();
     }
@@ -115,6 +144,7 @@ public class add_activites extends AppCompatActivity {
         ArrayAdapter<String> a = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, ACTIVITIES);
         a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerActivities.setAdapter(a);
+
         String[] ds = {"10 mins", "20 mins", "30 mins", "45 mins", "60 mins", "1.5 hours", "2 hours"};
         ArrayAdapter<String> da = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, ds);
         da.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -126,7 +156,10 @@ public class add_activites extends AppCompatActivity {
         Cursor c = db.getActivitiesForDate(userEmail, date);
         if (c != null && c.moveToFirst()) {
             do {
-                activityList.add(new ActivityItem(c.getString(c.getColumnIndexOrThrow("ACTIVITY_NAME")), c.getString(c.getColumnIndexOrThrow("DURATION"))));
+                activityList.add(new ActivityItem(
+                    c.getString(c.getColumnIndexOrThrow("ACTIVITY_NAME")), 
+                    c.getString(c.getColumnIndexOrThrow("DURATION"))
+                ));
             } while (c.moveToNext());
             c.close();
         }
@@ -135,10 +168,13 @@ public class add_activites extends AppCompatActivity {
 
     private void refreshListView() {
         llActivitiesList.removeAllViews();
-        for (int i = 0; i < activityList.size(); i++) addActivityCardToUI(activityList.get(i), i);
+        for (int i = 0; i < activityList.size(); i++) {
+            addActivityCardToUI(activityList.get(i), i);
+        }
     }
 
     private void addActivityCardToUI(ActivityItem item, int index) {
+        // Create the Card container
         CardView card = new CardView(this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.setMargins(0, 0, 0, 20);
@@ -146,38 +182,65 @@ public class add_activites extends AppCompatActivity {
         card.setRadius(24f);
         card.setCardElevation(4f);
 
+        // Main layout inside the card
         LinearLayout mainLayout = new LinearLayout(this);
         mainLayout.setOrientation(LinearLayout.HORIZONTAL);
 
+        // Colored vertical strip (Indicator)
         View strip = new View(this);
         strip.setLayoutParams(new LinearLayout.LayoutParams(16, ViewGroup.LayoutParams.MATCH_PARENT));
         strip.setBackgroundColor(colorMap.getOrDefault(item.activity, Color.GRAY));
 
+        // Horizontal content container
         LinearLayout content = new LinearLayout(this);
         content.setOrientation(LinearLayout.HORIZONTAL);
         content.setPadding(40, 40, 40, 40);
         content.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         content.setGravity(Gravity.CENTER_VERTICAL);
 
+        // Activity details (Name and Duration)
         LinearLayout info = new LinearLayout(this);
         info.setOrientation(LinearLayout.VERTICAL);
         info.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
 
-        TextView name = new TextView(this); name.setText(item.activity); name.setTextSize(18); name.setTextColor(Color.BLACK); name.setTypeface(null, Typeface.BOLD);
-        TextView dur = new TextView(this); dur.setText(item.duration); dur.setTextSize(14); dur.setTextColor(Color.GRAY);
-        info.addView(name); info.addView(dur);
+        TextView name = new TextView(this); 
+        name.setText(item.activity); 
+        name.setTextSize(18); 
+        name.setTextColor(Color.BLACK); 
+        name.setTypeface(null, Typeface.BOLD);
+        
+        TextView dur = new TextView(this); 
+        dur.setText(item.duration); 
+        dur.setTextSize(14); 
+        dur.setTextColor(Color.GRAY);
+        
+        info.addView(name); 
+        info.addView(dur);
 
-        ImageButton del = new ImageButton(this); del.setImageResource(android.R.drawable.ic_menu_delete); del.setBackgroundColor(Color.TRANSPARENT); del.setColorFilter(Color.RED);
-        del.setOnClickListener(v -> { activityList.remove(index); refreshListView(); });
+        ImageButton del = new ImageButton(this); 
+        del.setImageResource(android.R.drawable.ic_menu_delete); 
+        del.setBackgroundColor(Color.TRANSPARENT); 
+        del.setColorFilter(Color.RED);
+        del.setOnClickListener(v -> { 
+            activityList.remove(index); 
+            refreshListView(); 
+        });
 
-        content.addView(info); content.addView(del);
-        mainLayout.addView(strip); mainLayout.addView(content);
+        // Assemble the card
+        content.addView(info); 
+        content.addView(del);
+        mainLayout.addView(strip); 
+        mainLayout.addView(content);
         card.addView(mainLayout);
+
         llActivitiesList.addView(card, 0);
     }
 
     private static class ActivityItem {
         String activity, duration;
-        ActivityItem(String a, String d) { this.activity = a; this.duration = d; }
+        ActivityItem(String a, String d) { 
+            this.activity = a; 
+            this.duration = d; 
+        }
     }
 }

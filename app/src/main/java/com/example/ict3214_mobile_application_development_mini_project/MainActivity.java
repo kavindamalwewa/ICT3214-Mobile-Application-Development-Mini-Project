@@ -12,7 +12,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
-    //buttons
     Button btnLogin, btnSignup;
 
     @Override
@@ -25,25 +24,24 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        //Btn linking
+
         btnLogin = findViewById(R.id.btnLogin);
         btnSignup = findViewById(R.id.btnSignup);
 
-        //login btn
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Main to login
+
                 Intent intent = new Intent(MainActivity.this, loginActivity.class);
                 startActivity(intent);
             }
         });
 
-        //signup btn
+
         btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // main ti sign
+
                 Intent intent = new Intent(MainActivity.this, signupActivity.class);
                 startActivity(intent);
             }

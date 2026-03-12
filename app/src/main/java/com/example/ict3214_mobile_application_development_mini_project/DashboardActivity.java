@@ -36,10 +36,11 @@ public class DashboardActivity extends AppCompatActivity {
     TextView tvBMIValue, tvBMIStatus, tvCurrentDate, tvNoActivities;
     ImageView ivUserProfile;
     CardView btnAddActivity, btnEditActivity;
+    LinearLayout llActivitiesList;
+    BarChart barChart;
+
     DatabaseHelper myDb;
     String userEmail;
-    private LinearLayout llActivitiesList;
-    private BarChart barChart;
 
     private final String[] ACTIVITIES = {"Walking", "Running", "Cycling", "Push Ups", "Squats", "Weightlifting", "Jumping Jacks", "Bicycle Crunch", "Bicep Curls", "Shoulder Press"};
     private final int[] ACTIVITY_COLORS = {
@@ -55,12 +56,15 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_dashboard);
+
+        // Handle system bar insets for edge-to-edge display
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
+        // Initialize color mapping for UI list bullets
         colorMap = new HashMap<>();
         for (int i = 0; i < ACTIVITIES.length; i++) colorMap.put(ACTIVITIES[i], ACTIVITY_COLORS[i]);
 
@@ -102,6 +106,7 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        // Refresh all data when returning to the dashboard
         if (userEmail != null) {
             loadUserDataAndCalculateBMI();
             loadActivitiesForToday();
@@ -123,6 +128,7 @@ public class DashboardActivity extends AppCompatActivity {
                     if (heightMeters > 0) {
                         float bmi = weightKg / (heightMeters * heightMeters);
                         tvBMIValue.setText(String.format("%.1f", bmi));
+
                         if (bmi < 18.5) {
                             tvBMIStatus.setText("Underweight");
                             tvBMIStatus.setTextColor(Color.parseColor("#3B82F6"));
@@ -160,6 +166,7 @@ public class DashboardActivity extends AppCompatActivity {
                     String duration = cursor.getString(cursor.getColumnIndexOrThrow("DURATION"));
                     int color = colorMap.getOrDefault(activityName, Color.BLACK);
                     
+                    // Create bullet point with activity-specific color
                     TextView tv = new TextView(this);
                     String bulletText = "● " + activityName + " (" + duration + ")";
                     SpannableString ss = new SpannableString(bulletText);
@@ -185,11 +192,13 @@ public class DashboardActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
         SimpleDateFormat labelFormat = new SimpleDateFormat("EEE", Locale.getDefault());
         
+        // Calculate the starting Monday of the current week
         java.util.Calendar cal = java.util.Calendar.getInstance();
         int dayOfWeek = cal.get(java.util.Calendar.DAY_OF_WEEK);
         int diffToMonday = (dayOfWeek == java.util.Calendar.SUNDAY) ? -6 : (java.util.Calendar.MONDAY - dayOfWeek);
         cal.add(java.util.Calendar.DAY_OF_MONTH, diffToMonday);
         
+        // Fetch data for each day from Mon to Sun
         for (int i = 0; i < 7; i++) {
             Date date = cal.getTime();
             String dateStr = sdf.format(date);
@@ -211,6 +220,7 @@ public class DashboardActivity extends AppCompatActivity {
             cal.add(java.util.Calendar.DAY_OF_MONTH, 1);
         }
         
+        // Chart configuration
         BarDataSet dataSet = new BarDataSet(entries, "");
         dataSet.setColors(ACTIVITY_COLORS);
         dataSet.setDrawValues(false);
@@ -222,6 +232,7 @@ public class DashboardActivity extends AppCompatActivity {
         barChart.getDescription().setEnabled(false);
         barChart.getLegend().setEnabled(false);
         
+        // X-Axis (Days of week)
         XAxis xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
@@ -234,6 +245,7 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
+        // Y-Axis (Hours)
         YAxis leftAxis = barChart.getAxisLeft();
         leftAxis.setGranularity(1f);
         leftAxis.setAxisMinimum(0f);
@@ -244,7 +256,7 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
         barChart.getAxisRight().setEnabled(false);
-        barChart.invalidate();
+        barChart.invalidate(); // Refresh chart
     }
 
     private float parseDurationToHours(String duration) {

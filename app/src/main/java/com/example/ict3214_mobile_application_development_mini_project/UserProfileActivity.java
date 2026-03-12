@@ -27,7 +27,6 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        // Initialize UI elements
         tvProfileName = findViewById(R.id.tvProfileName);
         tvProfileEmail = findViewById(R.id.tvProfileEmail);
         tvProfileHeight = findViewById(R.id.tvProfileHeight);
@@ -39,10 +38,8 @@ public class UserProfileActivity extends AppCompatActivity {
         myDb = new DatabaseHelper(this);
         userEmail = getIntent().getStringExtra("LOGGED_IN_EMAIL");
 
-        // Back button functionality
         btnBack.setOnClickListener(v -> finish());
 
-        // Logout functionality
         btnLogout.setOnClickListener(v -> {
             Intent intent = new Intent(UserProfileActivity.this, loginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -50,7 +47,6 @@ public class UserProfileActivity extends AppCompatActivity {
             finish();
         });
 
-        // Edit Profile functionality
         btnEditProfile.setOnClickListener(v -> showEditDialog());
 
         if (userEmail != null) {

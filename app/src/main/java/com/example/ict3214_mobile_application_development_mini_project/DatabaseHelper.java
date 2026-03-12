@@ -29,7 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_ACT_DATE = "DATE";
 
     public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, 3); // Incremented version to 3
+        super(context, DATABASE_NAME, null, 3);
     }
 
     @Override
