@@ -4,12 +4,12 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="#FBFBFF"
     android:orientation="vertical"
     android:padding="20dp">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/background"
         android:layout_width="0dp"
         android:layout_height="331dp"
         android:layout_marginBottom="20dp"
@@ -22,7 +22,7 @@
         app:srcCompat="@drawable/vectorwelcome" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/logo"
         android:layout_width="307dp"
         android:layout_height="169dp"
         android:layout_marginTop="24dp"
@@ -38,44 +38,60 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Welcome to Fitness App"
-        android:textColor="#000000"
-        android:textSize="24sp"
+        android:text="ᴡᴇʟᴄᴏᴍᴇ"
+        android:textColor="#0A4567"
+        android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        app:layout_constraintTop_toBottomOf="@+id/background" />
 
-    <Button
-        android:id="@+id/btnLogin"
-        android:layout_width="112dp"
+    <TextView
+        android:id="@+id/textViewdes"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
-        android:backgroundTint="#2196F3"
-        android:text="Login"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/btnSignup"
+        android:text="ɪᴛ'ꜱ ᴛɪᴍᴇ ᴛᴏ ʀᴇɢᴀɪɴ ʏᴏᴜʀ ꜰɪᴛɴᴇꜱꜱ"
+        android:textColor="#0A4567"
+        android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <Button
-        android:id="@+id/btnSignup"
-        android:layout_width="112dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="8dp"
+    <LinearLayout
+        android:id="@+id/btnlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginBottom="32dp"
-        android:backgroundTint="#4CAF50"
-        android:text="Sign Up"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewdes">
+
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="112dp"
+            android:layout_height="55dp"
+            android:backgroundTint="#D36900"
+            android:text="Login"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btnSignup"
+            android:layout_width="112dp"
+            android:layout_height="55dp"
+            android:backgroundTint="#A76BA0"
+            android:text="Sign Up"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
